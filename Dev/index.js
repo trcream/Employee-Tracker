@@ -59,6 +59,86 @@ function addRole() {
   });
 }
 
-function addEmployee() {}
+function addEmployee() {
+  getRoles((roles) => {
+    getEmployees((employees) => {
+      // console.log(results);
 
-addRole();
+      (employeeSelections = employees.map((employee) => {
+        return {
+          name: employee.first_name + " " + employee.last_name,
+          value: employee.id,
+        };
+      })),
+        employeeSelections.unshift({ name: "None", value: null });
+      inquirer
+        .prompt([
+          {
+            message: "What is the first name?",
+            type: "input",
+            name: "first_name",
+          },
+          {
+            message: "What is the last name?",
+            type: "input",
+            name: "last_name",
+          },
+          {
+            message: "Select a role",
+            type: "list",
+            name: "role_id",
+            choices: roles.map((role) => {
+              //console.log(role);
+              return {
+                name: role.title,
+                value: role.id,
+              };
+            }),
+          },
+          {
+            message: "Manager",
+            type: "list",
+            name: "manager_id",
+            choices: employeeSelections,
+          },
+        ])
+        .then((response) => {
+          connection.query(
+            "INSERT INTO employee SET ?",
+            response,
+            (err, result) => {
+              if (err) throw err;
+              console.log("Inserted as ID" + result.insertId);
+            }
+          );
+        });
+    });
+  });
+}
+
+function getRoles(cb) {
+  connection.query("SELECT * FROM role", (err, results) => {
+    if (err) throw err;
+    cb(results);
+  });
+}
+
+function getEmployees(cb) {
+  connection.query("SELECT * FROM role", (err, results) => {
+    if (err) throw err;
+    cb(results);
+  });
+}
+
+function viewDepartment() {}
+
+function viewRoles() {
+  getRoles((roles) => {
+    // Loop over the roles and print info from each one to the terminal
+    console.table(roles);
+  });
+}
+
+function viewEmployee() {}
+
+addEmployee();
