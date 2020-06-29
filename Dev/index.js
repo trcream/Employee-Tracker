@@ -8,7 +8,14 @@ function start() {
         message: "What would you like to do?",
         type: "list",
         name: "start",
-        choices: ["Add a department", "Add a role", "Add an Employee"],
+        choices: [
+          "Add a department",
+          "Add a role",
+          "Add an Employee",
+          "View all Employees",
+          "View all Roles",
+          "View all Deparments",
+        ],
       },
     ])
     .then((response) => {
@@ -23,6 +30,15 @@ function start() {
       } else if (response.start === "Add an Employee") {
         console.log("Employee");
         addEmployee();
+      } else if (response.start === "View all Employees") {
+        console.log("View Employee");
+        viewEmployees();
+      } else if (response.start === "View all Roles") {
+        console.log("View Roles");
+        viewRoles();
+      } else if (response.start === "View all Deparments") {
+        console.log("View Deparments");
+        viewDepartments();
       }
     });
 }
@@ -156,12 +172,24 @@ function getEmployees(cb) {
   });
 }
 
-function viewDepartment() {}
+function viewEmployees() {
+  connection.query("SELECT * FROM employee", (err, results) => {
+    if (err) throw err;
+    console.table(results);
+  });
+}
 
 function viewRoles() {
-  getRoles((roles) => {
-    // Loop over the roles and print info from each one to the terminal
-    console.table(roles);
+  connection.query("SELECT * FROM role", (err, results) => {
+    if (err) throw err;
+    console.table(results);
+  });
+}
+
+function viewDepartments() {
+  connection.query("SELECT * FROM department", (err, results) => {
+    if (err) throw err;
+    console.table(results);
   });
 }
 
