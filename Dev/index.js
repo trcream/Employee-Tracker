@@ -1,6 +1,32 @@
 const connection = require("./db/connection");
 const inquirer = require("inquirer");
 
+function start() {
+  inquirer
+    .prompt([
+      {
+        message: "What would you like to do?",
+        type: "list",
+        name: "start",
+        choices: ["Add a department", "Add a role", "Add an Employee"],
+      },
+    ])
+    .then((response) => {
+      console.log(response.start);
+
+      if (response.start === "Add a department") {
+        console.log("department");
+        addDepartment();
+      } else if (response.start === "Add a role") {
+        console.log("role");
+        addRole();
+      } else if (response.start === "Add an Employee") {
+        console.log("Employee");
+        addEmployee();
+      }
+    });
+}
+
 function addDepartment() {
   inquirer
     .prompt([
@@ -141,4 +167,4 @@ function viewRoles() {
 
 function viewEmployee() {}
 
-addEmployee();
+start();
